@@ -1,5 +1,32 @@
 import cv2
 import dlib
+import Teskoneksi
+import time 
+
+# Inisialisasi socket dan koneksi ke server
+client_socket = Teskoneksi.connect_to_server()
+
+# Loop utama
+while True:
+    try:
+        # Kirim pesan ping ke server
+        client_socket = Teskoneksi.send_ping(client_socket)  # Perbarui socket jika diperlukan
+        
+        # Tunggu 5 detik sebelum mengirim pesan ping lagi
+        time.sleep(5)
+    
+    except (ConnectionResetError, BrokenPipeError):
+        print("Koneksi ke server terputus. Akan mencoba menyambung kembali...")
+        client_socket.close()
+        while True:
+            try:
+                client_socket = Teskoneksi.connect_to_server()  # Mencoba menyambung kembali ke server
+                print("Terhubung kembali ke server.")
+                # Setelah tersambung kembali, loop utama akan melanjutkan pengiriman pesan ping
+                break  
+            except (ConnectionError, TimeoutError):
+                print("Gagal menyambung kembali ke server. Akan mencoba lagi dalam beberapa detik...")
+                time.sleep(5)
 
 
 # Inisialisasi detektor wajah dan bibir dari dlib
