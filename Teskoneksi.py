@@ -1,9 +1,13 @@
 import socket
 import time
+import os
+
+server = os.environ["SERVER"]
+
 
 def connect_to_server():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = ('192.168.10.112', 12345)  # Sesuaikan dengan alamat IP server dan port
+    server_address = (server,12345)
     while True:
         try:
             client_socket.connect(server_address)
